@@ -114,12 +114,22 @@ export interface HealthReport {
 // Translation function type helper
 export type Translator = (key: string, ...args: (string | number)[]) => string;
 
+export interface TestPose {
+  id: string;
+  name: string;
+  instruction: string;
+  requiredView: 'Front' | 'Side' | 'Back' | 'Left' | 'Right';
+}
+
 export interface OrthopedicTest {
   id: string;
   name: string;
-  category: 'Posture' | 'Legs' | 'Spine' | 'Shoulder';
+  category: 'Posture' | 'Legs' | 'Spine' | 'Shoulder' | 'Neck' | 'Wrist' | 'Knee' | 'Hip' | 'Ankle';
   description: string;
-  instruction: string; // How to pose
-  requiredView: 'Front' | 'Side';
-  analyze: (data: SkeletonData, t: Translator) => HealthReport | null;
+  poses: TestPose[];
+  analyze: (
+    dataMap: Record<string, AIAnalysisResult>,
+    t: Translator,
+    patientHeight?: number
+  ) => HealthReport | null;
 }

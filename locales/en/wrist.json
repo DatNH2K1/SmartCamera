@@ -1,0 +1,14 @@
+{
+  "test.wrist.name": "Wrist ROM",
+  "test.wrist.desc": "Radial and ulnar deviation assessment.",
+  "pose.wrist.left_radial": "Left Radial",
+  "pose.wrist.right_radial": "Right Radial",
+  "instr.wrist.left_radial": "Tilt hand towards thumb.",
+  "instr.wrist.right_radial": "Tilt hand towards thumb.",
+  "diag.wrist.good": "Flexible Wrist",
+  "diag.wrist.unavailable": "Requires Hand Model",
+  "desc.wrist.good": "Good wrist flexibility.",
+  "desc.wrist.unavailable": "This test requires a hand keypoint model (MediaPipe Hands), not yet supported.",
+  "detail.wrist.normal": "Normal ROM.",
+  "detail.wrist.needs_hand_model": "Upgrade to MediaPipe Hands model for accurate wrist ROM measurement."
+}

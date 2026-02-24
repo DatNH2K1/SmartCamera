@@ -1,0 +1,19 @@
+{
+  "test.shoulder.name": "Shoulder ROM",
+  "test.shoulder.desc": "Test shoulder range of motion across 5 poses.",
+  "pose.shoulder.front": "Abduction (Front)",
+  "instr.shoulder.front": "Raise both arms sideways as high as possible.",
+  "pose.shoulder.left_forward": "Left Flexion (Side)",
+  "instr.shoulder.left_forward": "Raise left arm forward and up.",
+  "pose.shoulder.right_forward": "Right Flexion (Side)",
+  "instr.shoulder.right_forward": "Raise right arm forward and up.",
+  "pose.shoulder.left_backward": "Left Extension (Side)",
+  "instr.shoulder.left_backward": "Move left arm backward.",
+  "pose.shoulder.right_backward": "Right Extension (Side)",
+  "instr.shoulder.right_backward": "Move right arm backward.",
+  "diag.shoulder.good": "Good Mobility",
+  "diag.shoulder.restricted": "Restricted Mobility",
+  "desc.shoulder.good": "Shoulder ROM is within normal limits.",
+  "desc.shoulder.restricted": "Identified some motion restrictions.",
+  "detail.shoulder.abduction": "Abduction: Left {0}°, Right {1}°"
+}

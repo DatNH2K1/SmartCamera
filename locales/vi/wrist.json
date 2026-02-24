@@ -1,0 +1,14 @@
+{
+  "test.wrist.name": "Linh hoạt Cổ tay",
+  "test.wrist.desc": "Đo độ lệch trụ và lệch quay của cổ tay.",
+  "pose.wrist.left_radial": "Nghiêng quay trái",
+  "pose.wrist.right_radial": "Nghiêng quay phải",
+  "instr.wrist.left_radial": "Để tay thẳng, nghiêng bàn tay về phía ngón cái.",
+  "instr.wrist.right_radial": "Để tay thẳng, nghiêng bàn tay về phía ngón cái.",
+  "diag.wrist.good": "Cổ tay linh hoạt",
+  "diag.wrist.unavailable": "Cần model nhận diện tay",
+  "desc.wrist.good": "Cổ tay vận động trơn tru.",
+  "desc.wrist.unavailable": "Bài test này cần mô hình nhận diện ngón tay (MediaPipe Hands), chưa được hỗ trợ trong phiên bản hiện tại.",
+  "detail.wrist.normal": "Biên độ bình thường.",
+  "detail.wrist.needs_hand_model": "Cần nâng cấp sang model MediaPipe Hands để đo biên độ cổ tay chính xác."
+}

@@ -1,0 +1,18 @@
+{
+  "test.posture.name": "Full Posture",
+  "test.posture.desc": "Comprehensive body alignment analysis.",
+  "pose.posture.front": "Front View",
+  "pose.posture.side": "Side View",
+  "pose.posture.back": "Back View",
+  "instr.posture.front": "Stand naturally, face camera.",
+  "instr.posture.side": "Turn sideways, look ahead.",
+  "instr.posture.back": "Back towards camera.",
+  "detail.posture.shoulder_tilt": "Shoulder tilt: {0}° ({1})",
+  "detail.posture.hip_tilt": "Hip tilt: {0}° ({1})",
+  "detail.posture.ear_shift": "Ear shift: {0} cm ({1})",
+  "detail.posture.shoulder_shift": "Shoulder shift: {0} cm ({1})",
+  "diag.posture.good": "Balanced Posture",
+  "diag.posture.imbalance": "Alignment Imbalance",
+  "desc.posture.good": "Posture metrics are stable.",
+  "desc.posture.imbalance": "Minor postural imbalance detected."
+}

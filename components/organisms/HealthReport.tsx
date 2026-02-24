@@ -1,19 +1,17 @@
 import React from 'react';
 import { Check, Activity, ChevronUp, AlertTriangle } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { AIAnalysisResult, OrthopedicTest } from '../../types';
+import type { HealthReport as HealthReportData } from '../../types';
 
 interface HealthReportProps {
-  analysisResult: AIAnalysisResult | null;
-  selectedTest: OrthopedicTest;
+  report: HealthReportData | null;
   isDrawerOpen: boolean;
   onToggleDrawer: () => void;
   isEditBarOpen: boolean;
 }
 
 export const HealthReport: React.FC<HealthReportProps> = ({
-  analysisResult,
-  selectedTest,
+  report,
   isDrawerOpen,
   onToggleDrawer,
   isEditBarOpen,
@@ -23,16 +21,6 @@ export const HealthReport: React.FC<HealthReportProps> = ({
   if (isEditBarOpen) return null;
 
   const renderContent = () => {
-    if (
-      !analysisResult ||
-      !analysisResult.skeleton ||
-      Object.keys(analysisResult.skeleton).length === 0
-    ) {
-      return <div className="text-gray-400 text-center py-4">{t('app.no_skeleton')}</div>;
-    }
-
-    const report = selectedTest.analyze(analysisResult.skeleton, t);
-
     if (!report) {
       return <div className="text-gray-400 text-center py-4">{t('app.insufficient_data')}</div>;
     }
@@ -43,7 +31,11 @@ export const HealthReport: React.FC<HealthReportProps> = ({
           <h2 className="text-2xl font-bold text-white">{report.title}</h2>
           <div
             className={`px-4 py-2 rounded-full font-bold text-white ${
-              report.score >= 80 ? 'bg-green-600' : report.score >= 50 ? 'bg-yellow-600' : 'bg-red-600'
+              report.score >= 80
+                ? 'bg-green-600'
+                : report.score >= 50
+                  ? 'bg-yellow-600'
+                  : 'bg-red-600'
             }`}
           >
             {report.score}/100

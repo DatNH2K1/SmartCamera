@@ -5,7 +5,6 @@ import {
   EditorData,
   EditorPoint,
   EditorConnection,
-  EditorAngle,
   EditorTool,
   EditorLayout,
 } from '../../types';
@@ -52,7 +51,7 @@ const DEFAULT_CONNECTIONS = [
 const FACE_PARTS = ['nose', 'leftEye', 'rightEye', 'leftEar', 'rightEar'];
 
 export const EditorCanvas = forwardRef<ResultOverlayHandle, ResultOverlayProps>(
-  ({ imageSrc, data, width, height, hideFace, showSkeleton, activeTool, onDataChange }, ref) => {
+  ({ imageSrc, data, width, height, hideFace, showSkeleton, activeTool }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [imgElement, setImgElement] = useState<HTMLImageElement | null>(null);
 
@@ -145,15 +144,15 @@ export const EditorCanvas = forwardRef<ResultOverlayHandle, ResultOverlayProps>(
       });
 
       setEditorData({ points: newPoints, connections: newConnections, angles: [] });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
     // Reset selection when tool changes
     useEffect(() => {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedElementIds([]);
-       
+
       setConnectingStartId(null);
-       
+
       setDraggingPointId(null);
     }, [activeTool]);
 

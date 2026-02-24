@@ -1,0 +1,18 @@
+{
+  "test.posture.name": "Tư thế tổng quát",
+  "test.posture.desc": "Phân tích cân bằng cơ thể từ các góc chụp.",
+  "pose.posture.front": "Mặt trước",
+  "pose.posture.side": "Mặt bên",
+  "pose.posture.back": "Mặt sau",
+  "instr.posture.front": "Đứng thẳng tự nhiên, nhìn vào camera.",
+  "instr.posture.side": "Xoay người sang bên, nhìn thẳng.",
+  "instr.posture.back": "Xoay lưng lại với camera.",
+  "detail.posture.shoulder_tilt": "Lệch vai: {0}° (về phía {1})",
+  "detail.posture.hip_tilt": "Lệch hông: {0}° (về phía {1})",
+  "detail.posture.ear_shift": "Lệch tai: {0} cm (về phía {1})",
+  "detail.posture.shoulder_shift": "Lệch vai: {0} cm (về phía {1})",
+  "diag.posture.good": "Tư thế cân đối",
+  "diag.posture.imbalance": "Lệch trục cơ thể",
+  "desc.posture.good": "Dáng đứng của bạn đạt chuẩn cân bằng.",
+  "desc.posture.imbalance": "Phát hiện sự mất cân đối nhẹ giữa hai bên cơ thể."
+}

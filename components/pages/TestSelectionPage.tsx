@@ -51,7 +51,7 @@ export const TestSelectionPage: React.FC<TestSelectionPageProps> = ({
             <p className="text-sm text-gray-400 mb-4">{test.description}</p>
             <div className="flex items-center gap-2 text-xs text-gray-500">
               <Eye className="w-3 h-3" /> {t('app.angle_view')}:{' '}
-              {test.requiredView === 'Front' ? t('app.view.front') : t('app.view.side')}
+              {test.poses[0]?.requiredView === 'Front' ? t('app.view.front') : t('app.view.side')}
             </div>
           </button>
         ))}

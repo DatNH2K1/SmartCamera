@@ -1,0 +1,14 @@
+{
+  "test.neck.name": "Neck ROM",
+  "test.neck.desc": "Evaluate neck flexibility (Bends).",
+  "pose.neck.right_side_bend": "Neck Right Bend",
+  "pose.neck.left_side_bend": "Neck Left Bend",
+  "pose.neck.front_bend": "Neck Front Bend",
+  "pose.neck.back_bend": "Neck Back Bend",
+  "instr.neck.right_side_bend": "Bend head to right.",
+  "instr.neck.left_side_bend": "Bend head to left.",
+  "instr.neck.front_bend": "Look down, chin to chest.",
+  "instr.neck.back_bend": "Face up.",
+  "diag.neck.good": "Flexible Neck",
+  "desc.neck.good": "Cervical range is normal."
+}

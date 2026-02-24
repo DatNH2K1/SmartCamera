@@ -1,0 +1,19 @@
+{
+  "test.shoulder.name": "Tầm vận động Khớp Vai",
+  "test.shoulder.desc": "Kiểm tra biên độ vận động của khớp vai qua 5 tư thế chuẩn.",
+  "pose.shoulder.front": "Giơ tay ngang (Trực diện)",
+  "instr.shoulder.front": "Đứng thẳng, giơ hai tay sang ngang cao hết mức có thể.",
+  "pose.shoulder.left_forward": "Giơ tay trái (Nghiêng trái)",
+  "instr.shoulder.left_forward": "Đứng nghiêng trái, giơ tay trái về phía trước và lên trên.",
+  "pose.shoulder.right_forward": "Giơ tay phải (Nghiêng phải)",
+  "instr.shoulder.right_forward": "Đứng nghiêng phải, giơ tay phải về phía trước và lên trên.",
+  "pose.shoulder.left_backward": "Đưa tay trái ra sau (Nghiêng trái)",
+  "instr.shoulder.left_backward": "Đứng nghiêng trái, đưa tay trái ra sau hết mức.",
+  "pose.shoulder.right_backward": "Đưa tay phải ra sau (Nghiêng phải)",
+  "instr.shoulder.right_backward": "Đứng nghiêng phải, đưa tay phải ra sau hết mức.",
+  "diag.shoulder.good": "Khớp vai linh hoạt",
+  "diag.shoulder.restricted": "Hạn chế vận động vai",
+  "desc.shoulder.good": "Biên độ vận động khớp vai của bạn bình thường.",
+  "desc.shoulder.restricted": "Phát hiện sự hạn chế biên độ ở một số tư thế.",
+  "detail.shoulder.abduction": "Phân tích: Trái {0}°, Phải {1}°"
+}

@@ -25,12 +25,12 @@ import {
   updateImageInGallery,
 } from './services/galleryService';
 import { getOrthopedicTests } from './services/orthopedicService';
-import { AppState, AIAnalysisResult, GalleryImage, EditorTool } from './types';
+import { AppState, AIAnalysisResult, GalleryImage, EditorTool, HealthReport } from './types';
 import { LoadingOverlay } from './components/molecules/LoadingOverlay';
 import { EditorCanvas, ResultOverlayHandle } from './components/organisms/EditorCanvas';
 import { GalleryPage } from './components/pages/GalleryPage';
 import { TestSelectionPage } from './components/pages/TestSelectionPage';
-import { HealthReport } from './components/organisms/HealthReport';
+import { HealthReport as HealthReportComponent } from './components/organisms/HealthReport';
 import { IconButton } from './components/atoms/IconButton';
 import { useLanguage } from './contexts/LanguageContext';
 import { useSpeech } from './hooks/useSpeech';
@@ -54,12 +54,18 @@ export default function App() {
   const [latestThumb, setLatestThumb] = useState<GalleryImage | null>(null);
   const [currentImageId, setCurrentImageId] = useState<number | null>(null);
 
+  // Multi-pose state
+  const [currentPoseIndex, setCurrentPoseIndex] = useState(0);
+  const [allPoseResults, setAllPoseResults] = useState<Record<string, AIAnalysisResult>>({});
+  const [report, setReport] = useState<HealthReport | null>(null);
+
   const [selectedTestId, setSelectedTestId] = useState<string>('shoulder_level');
-  const availableTests = useMemo(() => getOrthopedicTests(t), [language, t]);
-  const selectedTest = availableTests.find((test) => test.id === selectedTestId) || availableTests[0];
+  const availableTests = useMemo(() => getOrthopedicTests(t), [t]);
+  const selectedTest =
+    availableTests.find((test) => test.id === selectedTestId) || availableTests[0];
 
   const [hideFace, setHideFace] = useState(true);
-  const [showSkeleton, setShowSkeleton] = useState(true);
+  const [showSkeleton] = useState(true);
   const [timerDelay, setTimerDelay] = useState<0 | 3 | 10>(0);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
 
@@ -72,6 +78,11 @@ export default function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [windowSize, setWindowSize] = useState({ w: window.innerWidth, h: window.innerHeight });
+
+  const updateThumbnail = async () => {
+    const img = await getLatestImage();
+    setLatestThumb(img);
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -91,21 +102,6 @@ export default function App() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [t]);
-
-  const updateThumbnail = async () => {
-    const img = await getLatestImage();
-    setLatestThumb(img);
-  };
-
-  const performCapture = useCallback(async () => {
-    const imageSrc = webcamRef.current?.getScreenshot();
-    if (imageSrc) {
-      playShutterSound();
-      setCapturedImage(imageSrc);
-      setAppState(AppState.PROCESSING);
-      setTimeout(() => handleAnalysis(imageSrc), 100);
-    }
-  }, [webcamRef, playShutterSound]);
 
   const startCaptureSequence = () => {
     if (timerDelay === 0) {
@@ -129,29 +125,62 @@ export default function App() {
     }, 1000);
   };
 
-  const handleAnalysis = async (imageSrc: string) => {
-    try {
-      const result = await analyzePose(imageSrc);
-      setAnalysisResult(result);
-      setAppState(AppState.RESULT);
-      setIsDrawerOpen(true);
+  const handleAnalysis = useCallback(
+    async (imageSrc: string) => {
+      try {
+        const result = await analyzePose(imageSrc);
+        const currentPose = selectedTest.poses[currentPoseIndex];
 
-      setTimeout(async () => {
-        if (resultOverlayRef.current) {
-          const compositeBase64 = resultOverlayRef.current.saveCanvas();
-          if (compositeBase64) {
-            const newId = await saveImageToGallery(compositeBase64);
-            setCurrentImageId(newId);
-            updateThumbnail();
+        const updatedResults = {
+          ...allPoseResults,
+          [currentPose.id]: result,
+        };
+        setAllPoseResults(updatedResults);
+
+        // Save individual capture to gallery
+        setTimeout(async () => {
+          if (resultOverlayRef.current) {
+            const compositeBase64 = resultOverlayRef.current.saveCanvas();
+            if (compositeBase64) {
+              await saveImageToGallery(compositeBase64);
+              updateThumbnail();
+            }
           }
+        }, 500);
+
+        if (currentPoseIndex < selectedTest.poses.length - 1) {
+          // Move to next pose
+          const nextIndex = currentPoseIndex + 1;
+          setCurrentPoseIndex(nextIndex);
+          setAppState(AppState.CAMERA);
+          const nextPose = selectedTest.poses[nextIndex];
+          speak(nextPose.instruction);
+        } else {
+          // All poses captured, perform final analysis
+          const finalReport = selectedTest.analyze(updatedResults, t, 170);
+          setReport(finalReport);
+          setAnalysisResult(result); // Show the last one in the editor for now
+          setAppState(AppState.RESULT);
+          setIsDrawerOpen(true);
         }
-      }, 500);
-    } catch (err: any) {
-      console.error(err);
-      setErrorMsg(err.message || t('app.error_title'));
-      setAppState(AppState.ERROR);
+      } catch (err: any) {
+        console.error(err);
+        setErrorMsg(err.message || t('app.error_title'));
+        setAppState(AppState.ERROR);
+      }
+    },
+    [currentPoseIndex, selectedTest, allPoseResults, t, speak]
+  );
+
+  const performCapture = useCallback(async () => {
+    const imageSrc = webcamRef.current?.getScreenshot();
+    if (imageSrc) {
+      playShutterSound();
+      setCapturedImage(imageSrc);
+      setAppState(AppState.PROCESSING);
+      setTimeout(() => handleAnalysis(imageSrc), 100);
     }
-  };
+  }, [webcamRef, playShutterSound, handleAnalysis]);
 
   const handleSaveEdits = async () => {
     if (resultOverlayRef.current) {
@@ -189,13 +218,20 @@ export default function App() {
     setCurrentImageId(null);
     setIsEditBarOpen(false);
     setIsDrawerOpen(true);
+    setCurrentPoseIndex(0);
+    setAllPoseResults({});
+    setReport(null);
   };
 
   const startTest = (testId: string) => {
     setSelectedTestId(testId);
     const testObj = availableTests.find((t) => t.id === testId);
     setAppState(AppState.CAMERA);
-    if (testObj) speak(testObj.instruction);
+    setCurrentPoseIndex(0);
+    setAllPoseResults({});
+    if (testObj && testObj.poses.length > 0) {
+      speak(testObj.poses[0].instruction);
+    }
   };
 
   if (appState === AppState.GALLERY) {
@@ -293,11 +329,13 @@ export default function App() {
             <div className="absolute top-24 left-0 right-0 p-4 flex justify-center pointer-events-none">
               <div className="bg-black/60 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 max-w-sm text-center pointer-events-auto">
                 <h3 className="text-blue-400 font-bold uppercase text-xs tracking-widest mb-1">
-                  {selectedTest.name}
+                  {selectedTest.name} ({currentPoseIndex + 1}/{selectedTest.poses.length})
                 </h3>
-                <p className="text-white text-sm font-medium mb-3">{selectedTest.instruction}</p>
+                <p className="text-white text-sm font-medium mb-3">
+                  {selectedTest.poses[currentPoseIndex]?.instruction}
+                </p>
                 <button
-                  onClick={() => speak(selectedTest.instruction)}
+                  onClick={() => speak(selectedTest.poses[currentPoseIndex]?.instruction || '')}
                   className="flex items-center gap-2 mx-auto bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full text-xs transition"
                 >
                   <Volume2 className="w-3 h-3" /> {t('app.btn.read_instruction')}
@@ -313,7 +351,9 @@ export default function App() {
               )}
               {countdown !== null && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
-                  <div className="text-[12rem] font-bold text-white animate-bounce">{countdown}</div>
+                  <div className="text-[12rem] font-bold text-white animate-bounce">
+                    {countdown}
+                  </div>
                 </div>
               )}
             </div>
@@ -382,9 +422,8 @@ export default function App() {
               </div>
             </div>
 
-            <HealthReport
-              analysisResult={analysisResult}
-              selectedTest={selectedTest}
+            <HealthReportComponent
+              report={report}
               isDrawerOpen={isDrawerOpen}
               onToggleDrawer={() => {
                 setIsDrawerOpen(!isDrawerOpen);
@@ -429,9 +468,7 @@ export default function App() {
             appState === AppState.CAMERA && (
               <div className="flex gap-2">
                 <button
-                  onClick={() =>
-                    setTimerDelay((prev) => (prev === 0 ? 3 : prev === 3 ? 10 : 0))
-                  }
+                  onClick={() => setTimerDelay((prev) => (prev === 0 ? 3 : prev === 3 ? 10 : 0))}
                   className={`p-3 rounded-full backdrop-blur-md border flex items-center gap-1 ${timerDelay > 0 ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-400' : 'bg-black/30 border-white/5 text-white/80'}`}
                 >
                   <Timer className="w-5 h-5" />
@@ -441,7 +478,11 @@ export default function App() {
                   onClick={() => setIsAudioEnabled(!isAudioEnabled)}
                   className={`p-3 rounded-full backdrop-blur-md border ${isAudioEnabled ? 'bg-black/30 border-white/5 text-white' : 'bg-red-500/20 border-red-500/50 text-red-400'}`}
                 >
-                  {isAudioEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+                  {isAudioEnabled ? (
+                    <Volume2 className="w-5 h-5" />
+                  ) : (
+                    <VolumeX className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             )

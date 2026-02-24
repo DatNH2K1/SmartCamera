@@ -1,0 +1,14 @@
+{
+  "test.neck.name": "Tầm vận động Cổ",
+  "test.neck.desc": "Đánh giá linh hoạt cột sống cổ (Cúi, ngửa, nghiêng).",
+  "pose.neck.right_side_bend": "Nghiêng đầu phải",
+  "pose.neck.left_side_bend": "Nghiêng đầu trái",
+  "pose.neck.front_bend": "Cúi đầu",
+  "pose.neck.back_bend": "Ngửa đầu",
+  "instr.neck.right_side_bend": "Nghiêng đầu sang phải hết mức có thể.",
+  "instr.neck.left_side_bend": "Nghiêng đầu sang trái hết mức có thể.",
+  "instr.neck.front_bend": "Cúi đầu về phía trước, cằm hướng về ngực.",
+  "instr.neck.back_bend": "Ngửa đầu ra phía sau.",
+  "diag.neck.good": "Cổ linh hoạt",
+  "desc.neck.good": "Cột sống cổ có biên độ vận động tốt."
+}
