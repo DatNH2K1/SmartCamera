@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@config "./tailwind.config.js";
 @layer base {
   body {
     @apply bg-black text-white overflow-hidden select-none touch-none;
