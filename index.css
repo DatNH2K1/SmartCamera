@@ -1,7 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+@import "tailwindcss";
 @layer base {
   body {
     @apply bg-black text-white overflow-hidden select-none touch-none;
